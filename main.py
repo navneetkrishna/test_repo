@@ -1,19 +1,15 @@
-# add a line to track on git
-# added from the github
+import sys
 
-# This is a sample Python script.
+def run(env):
+    if env not in ['dev', 'qa', 'prod']:
+        print(f"Invalid environment: {env}")
+        sys.exit(1)
+    print(f"Running script in {env} environment...")
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+if __name__ == "__main__":
+    # Read environment from command-line argument
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <env>")
+        sys.exit(1)
+    environment = sys.argv[1]
+    run(environment)
