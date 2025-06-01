@@ -20,7 +20,7 @@ pipeline {
         stage('Run script') {
 
             steps{
-                bat 'python main.py %env%'
+                bat "python main.py ${params.env}"
             }
         }
 
