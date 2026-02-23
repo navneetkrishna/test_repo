@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Python Data Structures Cheat Sheet</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0f1117; color: #e2e8f0; padding: 32px 16px; }
+  h1 { text-align: center; font-size: 2rem; color: #fff; margin-bottom: 6px; }
+  .subtitle { text-align: center; color: #94a3b8; margin-bottom: 36px; font-size: 0.95rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+
+  .card {
+    background: #1e2130;
+    border-radius: 12px;
+    border: 1px solid #2d3148;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .card-header h2 { font-size: 1.05rem; font-weight: 700; }
+  .card-header .badge {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .card-body { padding: 0 18px 18px; }
+
+  /* Color themes */
+  .list .card-header   { background: #1a2e1a; border-bottom: 2px solid #22c55e; }
+  .list h2             { color: #86efac; }
+  .list .badge         { background: #14532d; color: #86efac; }
+
+  .dict .card-header   { background: #1e2a1e; border-bottom: 2px solid #f59e0b; }
+  .dict h2             { color: #fcd34d; }
+  .dict .badge         { background: #451a03; color: #fcd34d; }
+
+  .set .card-header    { background: #1a1e2e; border-bottom: 2px solid #818cf8; }
+  .set h2              { color: #a5b4fc; }
+  .set .badge          { background: #1e1b4b; color: #a5b4fc; }
+
+  .tuple .card-header  { background: #1e1a2e; border-bottom: 2px solid #e879f9; }
+  .tuple h2            { color: #f0abfc; }
+  .tuple .badge        { background: #3b0764; color: #f0abfc; }
+
+  .string .card-header { background: #1e1a1a; border-bottom: 2px solid #f87171; }
+  .string h2           { color: #fca5a5; }
+  .string .badge       { background: #450a0a; color: #fca5a5; }
+
+  .common .card-header { background: #1a1e28; border-bottom: 2px solid #38bdf8; }
+  .common h2           { color: #7dd3fc; }
+  .common .badge       { background: #0c4a6e; color: #7dd3fc; }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.82rem; }
+  th { text-align: left; color: #64748b; font-weight: 600; padding: 6px 8px; border-bottom: 1px solid #2d3148; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.06em; }
+  td { padding: 7px 8px; border-bottom: 1px solid #1a1e30; vertical-align: top; line-height: 1.4; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #252840; }
+
+  code { font-family: 'Fira Code', 'Cascadia Code', monospace; font-size: 0.8rem; }
+  .method { color: #7dd3fc; font-weight: 600; }
+  .desc { color: #cbd5e1; }
+  .ret { color: #94a3b8; font-size: 0.75rem; font-style: italic; }
+
+  .example-block {
+    background: #0d1117;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-top: 14px;
+    border: 1px solid #2d3148;
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 0.78rem;
+    line-height: 1.7;
+    overflow-x: auto;
+  }
+  .kw  { color: #c084fc; }
+  .fn  { color: #60a5fa; }
+  .str { color: #86efac; }
+  .cm  { color: #475569; }
+  .num { color: #fb923c; }
+  .var { color: #e2e8f0; }
+
+  .shared-note {
+    background: #162032;
+    border: 1px solid #1e40af;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 0 auto 28px;
+    max-width: 1400px;
+    font-size: 0.83rem;
+    color: #93c5fd;
+  }
+  .shared-note strong { color: #bfdbfe; }
+  .tag {
+    display: inline-block;
+    background: #1e3a5f;
+    color: #93c5fd;
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin: 2px 2px;
+    font-size: 0.74rem;
+    font-family: monospace;
+  }
+  .section-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #475569;
+    margin: 12px 0 4px;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<h1>🐍 Python Data Structures — Cheat Sheet</h1>
+<p class="subtitle">All built-in methods, quick reference with examples</p>
+
+<div class="shared-note">
+  <strong>🔗 Methods shared across structures:</strong><br>
+  <span class="tag">len(x)</span> works on list, dict, set, tuple, string &nbsp;|&nbsp;
+  <span class="tag">in</span> operator works on all &nbsp;|&nbsp;
+  <span class="tag">sorted(x)</span> works on list, set, tuple, string &nbsp;|&nbsp;
+  <span class="tag">min(x)</span> <span class="tag">max(x)</span> work on list, set, tuple, string &nbsp;|&nbsp;
+  <span class="tag">x.count(v)</span> available on list, tuple, string &nbsp;|&nbsp;
+  <span class="tag">x.index(v)</span> available on list, tuple, string
+</div>
+
+<div class="grid">
+
+  <!-- LIST -->
+  <div class="card list">
+    <div class="card-header">
+      <h2>📋 List</h2>
+      <span class="badge">MUTABLE · ORDERED · DUPLICATES OK</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>What it does</th><th>Returns</th></tr>
+        <tr><td><code class="method">.append(x)</code></td><td class="desc">Add x to end</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.extend(iterable)</code></td><td class="desc">Add all items from iterable</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.insert(i, x)</code></td><td class="desc">Insert x at index i</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.remove(x)</code></td><td class="desc">Remove first occurrence of x</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.pop(i=-1)</code></td><td class="desc">Remove & return item at index i</td><td class="ret">item</td></tr>
+        <tr><td><code class="method">.clear()</code></td><td class="desc">Remove all items</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.index(x)</code></td><td class="desc">Index of first x</td><td class="ret">int</td></tr>
+        <tr><td><code class="method">.count(x)</code></td><td class="desc">Number of times x appears</td><td class="ret">int</td></tr>
+        <tr><td><code class="method">.sort(key, reverse)</code></td><td class="desc">Sort list in-place</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.reverse()</code></td><td class="desc">Reverse list in-place</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.copy()</code></td><td class="desc">Shallow copy of list</td><td class="ret">list</td></tr>
+      </table>
+      <div class="section-label">Example</div>
+      <div class="example-block">
+<span class="var">fruits</span> = [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>]
+<span class="var">fruits</span>.<span class="fn">append</span>(<span class="str">"mango"</span>)        <span class="cm"># ['apple','banana','cherry','mango']</span>
+<span class="var">fruits</span>.<span class="fn">insert</span>(<span class="num">1</span>, <span class="str">"kiwi"</span>)       <span class="cm"># ['apple','kiwi','banana',...]</span>
+<span class="var">fruits</span>.<span class="fn">remove</span>(<span class="str">"banana"</span>)        <span class="cm"># removes first 'banana'</span>
+<span class="var">popped</span> = <span class="var">fruits</span>.<span class="fn">pop</span>()          <span class="cm"># removes & returns 'mango'</span>
+<span class="var">fruits</span>.<span class="fn">sort</span>()                   <span class="cm"># alphabetical sort in-place</span>
+<span class="var">fruits</span>.<span class="fn">sort</span>(<span class="var">reverse</span>=<span class="kw">True</span>)      <span class="cm"># reverse alphabetical</span>
+<span class="var">nums</span> = [<span class="num">3</span>,<span class="num">1</span>,<span class="num">4</span>]
+<span class="var">nums</span>.<span class="fn">extend</span>([<span class="num">1</span>,<span class="num">5</span>,<span class="num">9</span>])           <span class="cm"># [3,1,4,1,5,9]</span>
+<span class="fn">print</span>(<span class="var">nums</span>.<span class="fn">count</span>(<span class="num">1</span>))            <span class="cm"># 2</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DICT -->
+  <div class="card dict">
+    <div class="card-header">
+      <h2>📖 Dictionary</h2>
+      <span class="badge">MUTABLE · ORDERED (3.7+) · UNIQUE KEYS</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>What it does</th><th>Returns</th></tr>
+        <tr><td><code class="method">.get(k, default)</code></td><td class="desc">Value for key k, or default</td><td class="ret">value</td></tr>
+        <tr><td><code class="method">.keys()</code></td><td class="desc">All keys</td><td class="ret">dict_keys</td></tr>
+        <tr><td><code class="method">.values()</code></td><td class="desc">All values</td><td class="ret">dict_values</td></tr>
+        <tr><td><code class="method">.items()</code></td><td class="desc">All (key, value) pairs</td><td class="ret">dict_items</td></tr>
+        <tr><td><code class="method">.update(d)</code></td><td class="desc">Merge dict d into self</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.pop(k, default)</code></td><td class="desc">Remove key k, return its value</td><td class="ret">value</td></tr>
+        <tr><td><code class="method">.popitem()</code></td><td class="desc">Remove & return last (k,v) pair</td><td class="ret">tuple</td></tr>
+        <tr><td><code class="method">.setdefault(k, v)</code></td><td class="desc">Set key k=v only if k absent</td><td class="ret">value</td></tr>
+        <tr><td><code class="method">.clear()</code></td><td class="desc">Remove all items</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.copy()</code></td><td class="desc">Shallow copy</td><td class="ret">dict</td></tr>
+        <tr><td><code class="method">dict.fromkeys(keys,v)</code></td><td class="desc">New dict from keys with value v</td><td class="ret">dict</td></tr>
+      </table>
+      <div class="section-label">Example</div>
+      <div class="example-block">
+<span class="var">person</span> = {<span class="str">"name"</span>: <span class="str">"Alice"</span>, <span class="str">"age"</span>: <span class="num">30</span>}
+<span class="fn">print</span>(<span class="var">person</span>.<span class="fn">get</span>(<span class="str">"city"</span>, <span class="str">"Unknown"</span>)) <span class="cm"># "Unknown"</span>
+<span class="var">person</span>.<span class="fn">update</span>({<span class="str">"age"</span>: <span class="num">31</span>, <span class="str">"city"</span>: <span class="str">"NYC"</span>})
+
+<span class="kw">for</span> <span class="var">k</span>, <span class="var">v</span> <span class="kw">in</span> <span class="var">person</span>.<span class="fn">items</span>():
+    <span class="fn">print</span>(<span class="var">k</span>, <span class="str">"→"</span>, <span class="var">v</span>)
+
+<span class="var">removed</span> = <span class="var">person</span>.<span class="fn">pop</span>(<span class="str">"city"</span>)    <span class="cm"># "NYC"</span>
+<span class="var">person</span>.<span class="fn">setdefault</span>(<span class="str">"score"</span>, <span class="num">0</span>)   <span class="cm"># adds score=0 only if missing</span>
+
+<span class="cm"># fromkeys: create template dict</span>
+<span class="var">keys</span> = [<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>]
+<span class="var">blank</span> = <span class="fn">dict</span>.<span class="fn">fromkeys</span>(<span class="var">keys</span>, <span class="num">0</span>)  <span class="cm"># {'a':0,'b':0,'c':0}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SET -->
+  <div class="card set">
+    <div class="card-header">
+      <h2>🔵 Set</h2>
+      <span class="badge">MUTABLE · UNORDERED · NO DUPLICATES</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>What it does</th><th>Returns</th></tr>
+        <tr><td><code class="method">.add(x)</code></td><td class="desc">Add element x</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.remove(x)</code></td><td class="desc">Remove x — raises KeyError if absent</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.discard(x)</code></td><td class="desc">Remove x — no error if absent</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.pop()</code></td><td class="desc">Remove & return arbitrary element</td><td class="ret">element</td></tr>
+        <tr><td><code class="method">.clear()</code></td><td class="desc">Remove all elements</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.union(s) or |</code></td><td class="desc">All elements from both sets</td><td class="ret">set</td></tr>
+        <tr><td><code class="method">.intersection(s) or &amp;</code></td><td class="desc">Elements common to both</td><td class="ret">set</td></tr>
+        <tr><td><code class="method">.difference(s) or -</code></td><td class="desc">Elements in self but not in s</td><td class="ret">set</td></tr>
+        <tr><td><code class="method">.symmetric_difference(s) or ^</code></td><td class="desc">Elements in either, not both</td><td class="ret">set</td></tr>
+        <tr><td><code class="method">.issubset(s)</code></td><td class="desc">True if all self elements in s</td><td class="ret">bool</td></tr>
+        <tr><td><code class="method">.issuperset(s)</code></td><td class="desc">True if s is subset of self</td><td class="ret">bool</td></tr>
+        <tr><td><code class="method">.isdisjoint(s)</code></td><td class="desc">True if no common elements</td><td class="ret">bool</td></tr>
+        <tr><td><code class="method">.update(s)</code></td><td class="desc">Add all elements of s (in-place union)</td><td class="ret">None</td></tr>
+        <tr><td><code class="method">.copy()</code></td><td class="desc">Shallow copy</td><td class="ret">set</td></tr>
+      </table>
+      <div class="section-label">Example</div>
+      <div class="example-block">
+<span class="var">a</span> = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>}
+<span class="var">b</span> = {<span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>}
+
+<span class="var">a</span>.<span class="fn">add</span>(<span class="num">10</span>)                    <span class="cm"># {1,2,3,4,10}</span>
+<span class="var">a</span>.<span class="fn">discard</span>(<span class="num">99</span>)               <span class="cm"># safe — no error</span>
+
+<span class="fn">print</span>(<span class="var">a</span> | <span class="var">b</span>)               <span class="cm"># union:  {1,2,3,4,5,6,10}</span>
+<span class="fn">print</span>(<span class="var">a</span> &amp; <span class="var">b</span>)               <span class="cm"># intersection: {3,4}</span>
+<span class="fn">print</span>(<span class="var">a</span> - <span class="var">b</span>)               <span class="cm"># difference: {1,2,10}</span>
+<span class="fn">print</span>(<span class="var">a</span> ^ <span class="var">b</span>)               <span class="cm"># sym diff: {1,2,5,6,10}</span>
+
+<span class="cm"># Deduplication trick</span>
+<span class="var">dupes</span> = [<span class="num">1</span>,<span class="num">2</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">3</span>,<span class="num">3</span>]
+<span class="var">unique</span> = <span class="fn">list</span>(<span class="fn">set</span>(<span class="var">dupes</span>))   <span class="cm"># [1, 2, 3]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TUPLE -->
+  <div class="card tuple">
+    <div class="card-header">
+      <h2>🔒 Tuple</h2>
+      <span class="badge">IMMUTABLE · ORDERED · DUPLICATES OK</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>What it does</th><th>Returns</th></tr>
+        <tr><td><code class="method">.count(x)</code></td><td class="desc">Number of times x appears</td><td class="ret">int</td></tr>
+        <tr><td><code class="method">.index(x)</code></td><td class="desc">Index of first occurrence of x</td><td class="ret">int</td></tr>
+      </table>
+      <p style="color:#94a3b8; font-size:0.8rem; margin-top:10px;">Tuples only have 2 methods because they're immutable. Use built-in functions like <code>len()</code>, <code>sorted()</code>, <code>min()</code>, <code>max()</code>, <code>sum()</code> on them.</p>
+      <div class="section-label">Example</div>
+      <div class="example-block">
+<span class="var">coords</span> = (<span class="num">10</span>, <span class="num">20</span>, <span class="num">10</span>, <span class="num">30</span>)
+<span class="fn">print</span>(<span class="var">coords</span>.<span class="fn">count</span>(<span class="num">10</span>))       <span class="cm"># 2</span>
+<span class="fn">print</span>(<span class="var">coords</span>.<span class="fn">index</span>(<span class="num">20</span>))       <span class="cm"># 1</span>
+
+<span class="cm"># Tuple unpacking</span>
+<span class="var">x</span>, <span class="var">y</span>, *<span class="var">rest</span> = <span class="var">coords</span>          <span class="cm"># x=10, y=20, rest=[10,30]</span>
+
+<span class="cm"># Named tuple (more useful tuple)</span>
+<span class="kw">from</span> collections <span class="kw">import</span> namedtuple
+<span class="var">Point</span> = <span class="fn">namedtuple</span>(<span class="str">"Point"</span>, [<span class="str">"x"</span>, <span class="str">"y"</span>])
+<span class="var">p</span> = <span class="var">Point</span>(<span class="num">3</span>, <span class="num">4</span>)
+<span class="fn">print</span>(<span class="var">p</span>.<span class="var">x</span>, <span class="var">p</span>.<span class="var">y</span>)               <span class="cm"># 3 4</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRING -->
+  <div class="card string">
+    <div class="card-header">
+      <h2>🔤 String</h2>
+      <span class="badge">IMMUTABLE · ORDERED · SEQUENCE</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr><th>Method</th><th>What it does</th><th>Returns</th></tr>
+        <tr><td><code class="method">.upper() / .lower()</code></td><td class="desc">Change case</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.title() / .capitalize()</code></td><td class="desc">Title case / First letter up</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.strip(chars)</code></td><td class="desc">Remove leading/trailing whitespace</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.lstrip() / .rstrip()</code></td><td class="desc">Strip left / right only</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.split(sep, maxsplit)</code></td><td class="desc">Split into list on sep</td><td class="ret">list</td></tr>
+        <tr><td><code class="method">.join(iterable)</code></td><td class="desc">Join iterable with self as separator</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.replace(old, new, n)</code></td><td class="desc">Replace occurrences of old with new</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.find(sub)</code></td><td class="desc">Index of first sub (–1 if not found)</td><td class="ret">int</td></tr>
+        <tr><td><code class="method">.index(sub)</code></td><td class="desc">Like find but raises ValueError</td><td class="ret">int</td></tr>
+        <tr><td><code class="method">.count(sub)</code></td><td class="desc">Count non-overlapping occurrences</td><td class="ret">int</td></tr>
+        <tr><td><code class="method">.startswith(s) / .endswith(s)</code></td><td class="desc">Check prefix / suffix</td><td class="ret">bool</td></tr>
+        <tr><td><code class="method">.isdigit() / .isalpha()</code></td><td class="desc">Check if all digits / letters</td><td class="ret">bool</td></tr>
+        <tr><td><code class="method">.isalnum()</code></td><td class="desc">All letters or digits</td><td class="ret">bool</td></tr>
+        <tr><td><code class="method">.isspace()</code></td><td class="desc">Only whitespace chars</td><td class="ret">bool</td></tr>
+        <tr><td><code class="method">.format(*args)</code></td><td class="desc">String interpolation</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.encode(enc)</code></td><td class="desc">Encode to bytes</td><td class="ret">bytes</td></tr>
+        <tr><td><code class="method">.zfill(width)</code></td><td class="desc">Pad with zeros on left</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.center(w, fill)</code></td><td class="desc">Center in field of width w</td><td class="ret">str</td></tr>
+        <tr><td><code class="method">.ljust(w) / .rjust(w)</code></td><td class="desc">Left/right justify</td><td class="ret">str</td></tr>
+      </table>
+      <div class="section-label">Example</div>
+      <div class="example-block">
+<span class="var">s</span> = <span class="str">"  Hello, World!  "</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">strip</span>())              <span class="cm"># "Hello, World!"</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">lower</span>())              <span class="cm"># "  hello, world!  "</span>
+<span class="fn">print</span>(<span class="var">s</span>.<span class="fn">replace</span>(<span class="str">"World"</span>, <span class="str">"Python"</span>))
+
+<span class="var">words</span> = <span class="str">"one,two,three"</span>.<span class="fn">split</span>(<span class="str">","</span>)  <span class="cm"># ['one','two','three']</span>
+<span class="var">joined</span> = <span class="str">" | "</span>.<span class="fn">join</span>(<span class="var">words</span>)          <span class="cm"># "one | two | three"</span>
+
+<span class="cm"># f-string (modern way)</span>
+<span class="var">name</span>, <span class="var">age</span> = <span class="str">"Alice"</span>, <span class="num">30</span>
+<span class="fn">print</span>(<span class="kw">f</span><span class="str">"{name} is {age} years old"</span>)
+
+<span class="fn">print</span>(<span class="str">"42"</span>.<span class="fn">zfill</span>(<span class="num">5</span>))           <span class="cm"># "00042"</span>
+<span class="fn">print</span>(<span class="str">"hi"</span>.<span class="fn">center</span>(<span class="num">10</span>, <span class="str">"-"</span>))    <span class="cm"># "----hi----"</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMON / BUILT-IN FUNCTIONS -->
+  <div class="card common">
+    <div class="card-header">
+      <h2>🌐 Common Built-ins</h2>
+      <span class="badge">WORKS ACROSS ALL STRUCTURES</span>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr><th>Function</th><th>What it does</th><th>Works on</th></tr>
+        <tr><td><code class="method">len(x)</code></td><td class="desc">Number of items</td><td class="ret">all</td></tr>
+        <tr><td><code class="method">sorted(x, key, rev)</code></td><td class="desc">Return new sorted list</td><td class="ret">list, set, tuple, str</td></tr>
+        <tr><td><code class="method">reversed(x)</code></td><td class="desc">Return reverse iterator</td><td class="ret">list, tuple, str</td></tr>
+        <tr><td><code class="method">min(x) / max(x)</code></td><td class="desc">Smallest / largest element</td><td class="ret">list, set, tuple, str</td></tr>
+        <tr><td><code class="method">sum(x)</code></td><td class="desc">Sum of all elements</td><td class="ret">list, set, tuple</td></tr>
+        <tr><td><code class="method">enumerate(x)</code></td><td class="desc">Pairs of (index, value)</td><td class="ret">list, tuple, str</td></tr>
+        <tr><td><code class="method">zip(*iterables)</code></td><td class="desc">Pair elements from multiple iterables</td><td class="ret">any iterables</td></tr>
+        <tr><td><code class="method">map(fn, x)</code></td><td class="desc">Apply fn to each element</td><td class="ret">any iterable</td></tr>
+        <tr><td><code class="method">filter(fn, x)</code></td><td class="desc">Keep elements where fn is True</td><td class="ret">any iterable</td></tr>
+        <tr><td><code class="method">any(x) / all(x)</code></td><td class="desc">True if any/all elements are truthy</td><td class="ret">any iterable</td></tr>
+        <tr><td><code class="method">list() / tuple() / set()</code></td><td class="desc">Convert between types</td><td class="ret">any iterable</td></tr>
+        <tr><td><code class="method">dict()</code></td><td class="desc">Create dict from pairs</td><td class="ret">pairs iterable</td></tr>
+      </table>
+      <div class="section-label">Example</div>
+      <div class="example-block">
+<span class="var">nums</span> = [<span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>, <span class="num">2</span>]
+
+<span class="cm"># enumerate — loop with index</span>
+<span class="kw">for</span> <span class="var">i</span>, <span class="var">v</span> <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="var">nums</span>):
+    <span class="fn">print</span>(<span class="var">i</span>, <span class="var">v</span>)
+
+<span class="cm"># zip — pair two lists</span>
+<span class="var">names</span> = [<span class="str">"a"</span>, <span class="str">"b"</span>, <span class="str">"c"</span>]
+<span class="var">scores</span> = [<span class="num">90</span>, <span class="num">85</span>, <span class="num">92</span>]
+<span class="var">paired</span> = <span class="fn">dict</span>(<span class="fn">zip</span>(<span class="var">names</span>, <span class="var">scores</span>)) <span class="cm"># {'a':90,'b':85,'c':92}</span>
+
+<span class="cm"># map & filter</span>
+<span class="var">squares</span> = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> <span class="var">x</span>: <span class="var">x</span>**<span class="num">2</span>, <span class="var">nums</span>))
+<span class="var">evens</span>   = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> <span class="var">x</span>: <span class="var">x</span> % <span class="num">2</span> == <span class="num">0</span>, <span class="var">nums</span>))
+
+<span class="cm"># sorted with key</span>
+<span class="var">words</span> = [<span class="str">"banana"</span>, <span class="str">"fig"</span>, <span class="str">"apple"</span>]
+<span class="fn">sorted</span>(<span class="var">words</span>, <span class="var">key</span>=<span class="fn">len</span>)          <span class="cm"># ['fig','apple','banana']</span>
+
+<span class="cm"># any / all</span>
+<span class="fn">print</span>(<span class="fn">any</span>(<span class="var">x</span> > <span class="num">8</span> <span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="var">nums</span>))  <span class="cm"># True  (9 > 8)</span>
+<span class="fn">print</span>(<span class="fn">all</span>(<span class="var">x</span> > <span class="num">0</span> <span class="kw">for</span> <span class="var">x</span> <span class="kw">in</span> <span class="var">nums</span>))  <span class="cm"># True  (all positive)</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- QUICK COMPARISON TABLE -->
+<div style="max-width:1400px; margin: 32px auto 0;">
+  <div class="card common">
+    <div class="card-header" style="background:#12161f; border-bottom: 2px solid #334155;">
+      <h2 style="color:#e2e8f0;">⚡ Quick Comparison</h2>
+    </div>
+    <div class="card-body">
+      <table>
+        <tr>
+          <th>Feature</th>
+          <th>List <code>[]</code></th>
+          <th>Tuple <code>()</code></th>
+          <th>Set <code>{}</code></th>
+          <th>Dict <code>{k:v}</code></th>
+          <th>String <code>""</code></th>
+        </tr>
+        <tr><td>Mutable</td><td>✅</td><td>❌</td><td>✅</td><td>✅</td><td>❌</td></tr>
+        <tr><td>Ordered</td><td>✅</td><td>✅</td><td>❌</td><td>✅ (3.7+)</td><td>✅</td></tr>
+        <tr><td>Duplicates</td><td>✅</td><td>✅</td><td>❌</td><td>Keys: ❌</td><td>✅</td></tr>
+        <tr><td>Indexable</td><td>✅</td><td>✅</td><td>❌</td><td>By key</td><td>✅</td></tr>
+        <tr><td>Use case</td><td class="desc">General collection</td><td class="desc">Fixed data / coords</td><td class="desc">Unique items / math ops</td><td class="desc">Key-value lookup</td><td class="desc">Text</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<p style="text-align:center; color:#334155; margin-top:24px; font-size:0.78rem;">Python Built-in Data Structures · All methods as of Python 3.10+</p>
+</body>
+</html>
